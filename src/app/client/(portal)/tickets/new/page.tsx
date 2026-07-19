@@ -32,21 +32,52 @@ export default function NewTicketPage() {
   });
 
   const onSubmit = async (values: CreateTicketInput) => {
+
+
+
+
     try {
-      const ticket = await createTicket(values);
+      // const ticket = await createTicket(values);
+      const attachments: any = [];
       for (const file of files) {
         try {
-          await uploadAttachment(ticket.id, file);
+         const sub = await uploadAttachment(file.name, file);
+         console.log(sub)
         } catch {
           toast.error(`Could not attach ${file.name}`);
         }
       }
-      toast.success("Ticket submitted.");
-      router.push(`/client/tickets/${ticket.id}`);
+      // toast.success("Ticket submitted.");
+      // router.push(`/client/tickets/${ticket.id}`);
     } catch {
       toast.error("Could not submit ticket. Please try again.");
     }
   };
+
+//  try {
+//       const attachments: any = [];
+//       for (const file of files) {
+//         attachments.push(file);
+//       }
+//       const submitData = {
+//         ...values,
+//         attachments: attachments,
+//       };
+
+//       const ticket = await createTicket(submitData);
+
+//       toast.success("Ticket submitted.");
+//       // router.push(`/client/tickets}`);
+//     } catch {
+//       toast.error("Could not submit ticket. Please try again.");
+//     }
+
+
+
+
+
+
+
 
   return (
     <div>

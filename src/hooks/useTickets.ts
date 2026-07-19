@@ -11,7 +11,12 @@ import {
 } from "@/lib/api/types";
 import { categoryFromLabel, priorityFromLabel } from "@/lib/api/enums";
 import { useTicketStore } from "@/store/useTicketStore";
-import type { CreateTicketInput, AddCommentInput, AddCsatInput, RejectResolutionInput } from "@/lib/validations/ticket";
+import type {
+  CreateTicketInput,
+  AddCommentInput,
+  AddCsatInput,
+  RejectResolutionInput,
+} from "@/lib/validations/ticket";
 
 /**
  * Endpoints consumed here (see itemization in the final summary):
@@ -26,7 +31,14 @@ import type { CreateTicketInput, AddCommentInput, AddCsatInput, RejectResolution
  *  POST /api/Tickets/{id}/csat
  */
 export function useTickets() {
-  const { setTickets, setLoading, setError, setSelectedTicket, upsertTicket, filters } = useTicketStore();
+  const {
+    setTickets,
+    setLoading,
+    setError,
+    setSelectedTicket,
+    upsertTicket,
+    filters,
+  } = useTicketStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const listTickets = useCallback(
@@ -34,7 +46,9 @@ export function useTickets() {
       setLoading(true);
       setError(null);
       try {
-        const { data } = await api.get("/get-tickets", { params: buildListParams(query) });
+        const { data } = await api.get("/get-tickets", {
+          params: buildListParams(query),
+        });
         const paged = normalizePaged<ApiTicket>(data, normalizeTicket);
         setTickets(paged.items, paged.totalCount, paged.totalPages);
         return paged;
@@ -45,7 +59,7 @@ export function useTickets() {
         setLoading(false);
       }
     },
-    [setTickets, setLoading, setError]
+    [setTickets, setLoading, setError],
   );
 
   const getTicket = useCallback(
@@ -64,7 +78,7 @@ export function useTickets() {
         setLoading(false);
       }
     },
-    [setSelectedTicket, setLoading, setError]
+    [setSelectedTicket, setLoading, setError],
   );
 
   const createTicket = useCallback(async (input: CreateTicketInput) => {
@@ -75,6 +89,7 @@ export function useTickets() {
         description: input.description,
         category: categoryFromLabel(input.category),
         priority: priorityFromLabel(input.priority),
+        attachments: input.attachments,
       });
       return normalizeTicket(data);
     } finally {
@@ -85,32 +100,47 @@ export function useTickets() {
   const uploadAttachment = useCallback(async (ticketId: string, file: File) => {
     const form = new FormData();
     form.append("file", file);
-    const { data } = await api.post(`/api/Tickets/${ticketId}/attachments`, form, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    const { data } = await api.post(
+      `/api/Tickets/${ticketId}/attachments`,
+      form,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      },
+    );
     return data;
   }, []);
 
   const addComment = useCallback(
     async (ticketId: string, input: AddCommentInput) => {
-      const { data } = await api.post(`/api/Tickets/${ticketId}/comments/client`, {
-        message: input.message,
-        isInternal: input.isInternal ?? false,
-      });
+      const { data } = await api.post(
+        `/api/Tickets/${ticketId}/comments/client`,
+        {
+          message: input.message,
+          isInternal: input.isInternal ?? false,
+        },
+      );
       return data;
     },
-    []
+    [],
   );
 
   const acceptResolution = useCallback(async (ticketId: string) => {
-    const { data } = await api.post(`/api/Tickets/${ticketId}/accept-resolution`);
+    const { data } = await api.post(
+      `/api/Tickets/${ticketId}/accept-resolution`,
+    );
     return data;
   }, []);
 
-  const rejectResolution = useCallback(async (ticketId: string, input: RejectResolutionInput) => {
-    const { data } = await api.post(`/api/Tickets/${ticketId}/reject-resolution`, { reason: input.reason });
-    return data;
-  }, []);
+  const rejectResolution = useCallback(
+    async (ticketId: string, input: RejectResolutionInput) => {
+      const { data } = await api.post(
+        `/api/Tickets/${ticketId}/reject-resolution`,
+        { reason: input.reason },
+      );
+      return data;
+    },
+    [],
+  );
 
   const reopenTicket = useCallback(async (ticketId: string) => {
     const { data } = await api.post(`/api/Tickets/${ticketId}/reopen`);

@@ -7,6 +7,7 @@ export const createTicketSchema = z.object({
   description: z.string().min(1, "Description is required"),
   category: z.enum(TICKET_CATEGORY_LABELS, { message: "Select a category" }),
   priority: z.enum(TICKET_PRIORITY_LABELS, { message: "Select a priority" }),
+ attachments: z.array(z.string()).optional()
 });
 export type CreateTicketInput = z.infer<typeof createTicketSchema>;
 

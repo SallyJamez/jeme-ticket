@@ -15,7 +15,7 @@ export default auth((req) => {
   // The recipient is never logged in at this point, so this route must be
   // excluded from the generic "portal requires a session" check below —
   // but it's only valid to view with both query params present.
-  const isResetPasswordRoute = pathname === "/client/reset-password";
+  const isResetPasswordRoute = pathname === "/client/reset-password" || pathname === "/agent/reset-password";
   if (isResetPasswordRoute) {
     const email = nextUrl.searchParams.get("email");
     const token = nextUrl.searchParams.get("token");

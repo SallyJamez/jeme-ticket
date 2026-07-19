@@ -16,7 +16,7 @@ import { Plus, Pencil, ShieldCheck, Info } from "lucide-react";
 import { toast } from "sonner";
 import type { ApiStaff } from "@/lib/api/types";
 
-const TABS = ["Users & Roles", "Clients", "SLA Policies", "Departments"] as const;
+const TABS = ["Agents", "Clients", "SLA Policies", "Departments"] as const;
 
 const slaPolicies = [
   { priority: "High", firstResponse: "2 hours", resolution: "24 hours" },
@@ -39,7 +39,7 @@ function NoBackendNotice() {
 }
 
 export default function AdminPage() {
-  const [tab, setTab] = useState<(typeof TABS)[number]>("Users & Roles");
+  const [tab, setTab] = useState<(typeof TABS)[number]>("Agents");
   const { listStaff, listClients } = useAdmin();
   const { staff, clients, isLoading } = useAdminStore();
   const [inviteOpen, setInviteOpen] = useState(false);
@@ -71,7 +71,7 @@ export default function AdminPage() {
         ))}
       </div>
 
-      {tab === "Users & Roles" && (
+      {tab === "Agents" && (
         <Card>
           <CardHeader>
             <CardTitle>Staff accounts</CardTitle>

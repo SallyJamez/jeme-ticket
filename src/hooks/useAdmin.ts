@@ -78,7 +78,7 @@ export function useAdmin() {
     async (input: CreateStaffInput) => {
       setIsSubmitting(true);
       try {
-        const { data } = await api.post("/api/Admin/staff", input);
+        const { data } = await api.post("/api/Admin/create-staff", input);
         const staff = normalizeStaff(data ?? input);
         upsertStaff(staff);
         return staff;
