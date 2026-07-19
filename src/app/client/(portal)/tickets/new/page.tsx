@@ -38,7 +38,7 @@ export default function NewTicketPage() {
 
     try {
       // const ticket = await createTicket(values);
-      const attachments: any = [];
+      const attachments: string[] = [];
       for (const file of files) {
         try {
          const sub = await uploadAttachment(file.name, file);
